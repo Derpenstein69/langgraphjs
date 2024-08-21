@@ -22,7 +22,6 @@ A super-step can be considered a single iteration over the graph nodes. Nodes th
 
 The `StateGraph` class is the main graph class to uses. This is parameterized by a user defined `State` object. (passed via the `channels` argument)
 
-
 ### MessageGraph
 
 The `MessageGraph` class is a special type of graph. The `State` of a `MessageGraph` is ONLY a list of messages. This class is rarely used except for chatbots, as most applications require the `State` to be more complex than a list of messages.
@@ -57,15 +56,15 @@ Reducers are key to understanding how updates from nodes are applied to the `Sta
 import { StateGraph } from "@langchain/langgraph";
 
 interface State {
-  foo: number;
-  bar: string[];
+	foo: number;
+	bar: string[];
 }
 
 const graphBuilder = new StateGraph<State>({
-  channels: {
-    foo: null,
-    bar: null,
-  }
+	channels: {
+		foo: null,
+		bar: null,
+	},
 });
 ```
 
@@ -77,18 +76,19 @@ In this example, no reducer functions are specified for any key. Let's assume th
 import { StateGraph } from "@langchain/langgraph";
 
 interface State {
-  foo: number;
-  bar: string[];
+	foo: number;
+	bar: string[];
 }
 
 const graphBuilder = new StateGraph<State>({
-  channels: {
-    foo: null,
-    bar: {
-      reducer: (state: string[], update: string[]) => state.concat(update),
-      default: () => [],
-    },
-  }
+	channels: {
+		foo: null,
+		bar: {
+			reducer: (state: string[], update: string[]) =>
+				state.concat(update),
+			default: () => [],
+		},
+	},
 });
 ```
 
@@ -102,20 +102,20 @@ In this example, we've updated our `bar` field to be an object containing a `red
 import { BaseMessage } from "@langchain/langgraph";
 
 interface MessageState {
-  messages: BaseMessage[];
+	messages: BaseMessage[];
 }
 
 export class MessageGraph extends StateGraph {
-  constructor() {
-    super({
-      channels: {
-        __root__: {
-          reducer: messagesStateReducer,
-          default: () => [],
-        },
-      },
-    });
-  }
+	constructor() {
+		super({
+			channels: {
+				__root__: {
+					reducer: messagesStateReducer,
+					default: () => [],
+				},
+			},
+		});
+	}
 }
 ```
 
@@ -125,7 +125,7 @@ We often see a list of messages being a key component of state, so this prebuilt
 
 ```typescript
 interface State extends MessagesState {
-  documents: Array<string>
+	documents: Array<string>;
 }
 ```
 
@@ -148,7 +148,7 @@ const myNode = (state: State, config?: RunnableConfig) => {
   console.log("In node: ", config["configurable"]["user_id"])
   return {
     results: `Hello, ${state.input}!`
-  }  
+  }
 }
 
 
@@ -193,10 +193,10 @@ graph.addEdge("nodeA", END);
 
 Edges define how the logic is routed and how the graph decides to stop. This is a big part of how your agents work and how different nodes communicate with each other. There are a few key types of edges:
 
-- Normal Edges: Go directly from one node to the next.
-- Conditional Edges: Call a function to determine which node(s) to go to next.
-- Entry Point: Which node to call first when user input arrives.
-- Conditional Entry Point: Call a function to determine which node(s) to call first when user input arrives.
+-   Normal Edges: Go directly from one node to the next.
+-   Conditional Edges: Call a function to determine which node(s) to go to next.
+-   Entry Point: Which node to call first when user input arrives.
+-   Conditional Entry Point: Call a function to determine which node(s) to call first when user input arrives.
 
 A node can have MULTIPLE outgoing edges. If a node has multiple out-going edges, **all** of those destination nodes will be executed in parallel as a part of the next superstep.
 
@@ -224,8 +224,8 @@ You can optionally provide an object that maps the `routingFunction`'s output to
 
 ```typescript
 graph.addConditionalEdges("nodeA", routingFunction, {
-  true: "nodeB",
-  false: "nodeC"
+	true: "nodeB",
+	false: "nodeC",
 });
 ```
 
@@ -234,9 +234,9 @@ graph.addConditionalEdges("nodeA", routingFunction, {
 The entry point is the first node(s) that are run when the graph starts. You can use the [`addEdge`](https://langchain-ai.github.io/langgraphjs/reference/classes/index.StateGraph.html#addEdge) method from the virtual [`START`](https://langchain-ai.github.io/langgraphjs/reference/variables/index.START.html) node to the first node to execute to specify where to enter the graph.
 
 ```typescript
-import { START } from "@langchain/langgraph" 
+import { START } from "@langchain/langgraph";
 
-graph.addEdge(START, "nodeA")
+graph.addEdge(START, "nodeA");
 ```
 
 ### Conditional Entry Point
@@ -244,17 +244,17 @@ graph.addEdge(START, "nodeA")
 A conditional entry point lets you start at different nodes depending on custom logic. You can use [`addConditionalEdges`](https://langchain-ai.github.io/langgraphjs/reference/classes/index.StateGraph.html#addConditionalEdges) from the virtual [`START`](https://langchain-ai.github.io/langgraphjs/reference/variables/index.START.html) node to accomplish this.
 
 ```typescript
-import { START } from "@langchain/langgraph" 
+import { START } from "@langchain/langgraph";
 
-graph.addConditionalEdges(START, routingFunction)
+graph.addConditionalEdges(START, routingFunction);
 ```
 
 You can optionally provide an object that maps the `routingFunction`'s output to the name of the next node.
 
 ```typescript
 graph.addConditionalEdges(START, routingFunction, {
-  true: "nodeB",
-  false: "nodeC"
+	true: "nodeB",
+	false: "nodeC",
 });
 ```
 
@@ -266,7 +266,7 @@ First, checkpointers facilitate [human-in-the-loop workflows](agentic_concepts.m
 
 Second, it allows for ["memory"](agentic_concepts.md#memory) between interactions. You can use checkpointers to create threads and save the state of a thread after a graph executes. In the case of repeated human interactions (like conversations) any follow up messages can be sent to that checkpoint, which will retain its memory of previous ones.
 
-See [this guide](../how-tos/persistence.ipynb) for how to add a checkpointer to your graph.
+See [this guide](./../how-tos/persistence.ipynb) for how to add a checkpointer to your graph.
 
 ## Threads
 
@@ -277,18 +277,18 @@ Threads enable the checkpointing of multiple different runs, making them essenti
 You must pass these when invoking the graph as part of the configurable part of the config.
 
 ```typescript
-const config = { configurable: { thread_id: "a" }};
+const config = { configurable: { thread_id: "a" } };
 await graph.invoke(inputs, config);
 ```
 
-See [this guide](../how-tos/persistence.ipynb) for how to use threads.
+See [this guide](./../how-tos/persistence.ipynb) for how to use threads.
 
 ## Checkpointer state
 
 When interacting with the checkpointer state, you must specify a [thread identifier](#threads). Each checkpoint saved by the checkpointer has two properties:
 
-- **values**: This is the value of the state at this point in time.
-- **next**: This is a tuple of the nodes to execute next in the graph.
+-   **values**: This is the value of the state at this point in time.
+-   **next**: This is a tuple of the nodes to execute next in the graph.
 
 ### Get state
 
@@ -302,9 +302,9 @@ You can also call `await graph.getStateHistory(config)` to get a list of the his
 
 You can also interact with the state directly and update it. This takes three different components:
 
-- `config`
-- `values`
-- `asNode`
+-   `config`
+-   `values`
+-   `asNode`
 
 **config**
 
@@ -318,17 +318,17 @@ Let's assume you have defined the state of your graph as:
 
 ```typescript
 interface State {
-  foo: number;
-  bar: string[];
+	foo: number;
+	bar: string[];
 }
 
 const channels = {
-  foo: null,
-  bar: {
-    reducer: (state: string[], update: string[]) => state.concat(update),
-    default: () => [],
-  },
-}
+	foo: null,
+	bar: {
+		reducer: (state: string[], update: string[]) => state.concat(update),
+		default: () => [],
+	},
+};
 ```
 
 Let's now assume the current state of the graph is
@@ -340,7 +340,7 @@ Let's now assume the current state of the graph is
 If you update the state as below:
 
 ```typescript
-await graph.updateState(config, { foo: 2, bar: ["b"] })
+await graph.updateState(config, { foo: 2, bar: ["b"] });
 ```
 
 Then the new state of the graph will be:
@@ -361,11 +361,11 @@ The reason this matters is that the next steps in the graph to execute depend on
 
 LangGraph can easily handle migrations of graph definitions (nodes, edges, and state) even when using a checkpointer to track state.
 
-- For threads at the end of the graph (i.e. not interrupted) you can change the entire topology of the graph (i.e. all nodes and edges, remove, add, rename, etc)
-- For threads currently interrupted, we support all topology changes other than renaming / removing nodes (as that thread could now be about to enter a node that no longer exists) -- if this is a blocker please reach out and we can prioritize a solution.
-- For modifying state, we have full backwards and forwards compatibility for adding and removing keys
-- State keys that are renamed lose their saved state in existing threads
-- State keys whose types change in incompatible ways could currently cause issues in threads with state from before the change -- if this is a blocker please reach out and we can prioritize a solution.
+-   For threads at the end of the graph (i.e. not interrupted) you can change the entire topology of the graph (i.e. all nodes and edges, remove, add, rename, etc)
+-   For threads currently interrupted, we support all topology changes other than renaming / removing nodes (as that thread could now be about to enter a node that no longer exists) -- if this is a blocker please reach out and we can prioritize a solution.
+-   For modifying state, we have full backwards and forwards compatibility for adding and removing keys
+-   State keys that are renamed lose their saved state in existing threads
+-   State keys whose types change in incompatible ways could currently cause issues in threads with state from before the change -- if this is a blocker please reach out and we can prioritize a solution.
 
 ## Configuration
 
@@ -374,7 +374,7 @@ When creating a graph, you can also mark that certain parts of the graph are con
 You can then pass this configuration into the graph using the `configurable` config field.
 
 ```typescript
-const config = { configurable: { llm: "anthropic" }};
+const config = { configurable: { llm: "anthropic" } };
 
 await graph.invoke(inputs, config);
 ```
@@ -390,10 +390,10 @@ const nodeA = (state, config) => {
   }
   ...
 };
-    
+
 ```
 
-See [this guide](../how-tos/configuration.ipynb) for a full breakdown on configuration
+See [this guide](./../how-tos/configuration.ipynb) for a full breakdown on configuration
 
 ## Breakpoints
 
@@ -411,7 +411,7 @@ await graph.invoke(inputs, config);
 await graph.invoke(null, config);
 ```
 
-See [this guide](../how-tos/breakpoints.ipynb) for a full walkthrough of how to add breakpoints.
+See [this guide](./../how-tos/breakpoints.ipynb) for a full walkthrough of how to add breakpoints.
 
 ## Visualization
 
@@ -421,7 +421,7 @@ It's often nice to be able to visualize graphs, especially as they get more comp
 
 LangGraph is built with first class support for streaming. There are several different streaming modes that LangGraph supports:
 
-- [`"values"`](../how-tos/stream-values.ipynb): This streams the full value of the state after each step of the graph.
-- [`"updates`](../how-tos/stream-updates.ipynb): This streams the updates to the state after each step of the graph. If multiple updates are made in the same step (e.g. multiple nodes are run) then those updates are streamed separately.
+-   [`"values"`](./../how-tos/stream-values.ipynb): This streams the full value of the state after each step of the graph.
+-   [`"updates`](./../how-tos/stream-updates.ipynb): This streams the updates to the state after each step of the graph. If multiple updates are made in the same step (e.g. multiple nodes are run) then those updates are streamed separately.
 
-In addition, you can use the [`streamEvents`](https://v02.api.js.langchain.com/classes/langchain_core_runnables.Runnable.html#streamEvents) method to stream back events that happen _inside_ nodes. This is useful for [streaming tokens of LLM calls](../how-tos/streaming-tokens-without-langchain.ipynb).
+In addition, you can use the [`streamEvents`](https://v02.api.js.langchain.com/classes/langchain_core_runnables.Runnable.html#streamEvents) method to stream back events that happen _inside_ nodes. This is useful for [streaming tokens of LLM calls](./../how-tos/streaming-tokens-without-langchain.ipynb).

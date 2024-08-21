@@ -18,7 +18,7 @@ Memory is a key concept to agentic applications. Memory is important because end
 
 LangGraph is perfectly suited to give you full control over the memory of your application. With user defined [`State`](./low_level.md#state) you can specify the exact schema of the memory you want to retain. With [checkpointers](./low_level.md#checkpointer) you can store checkpoints of previous interactions and resume from there in follow up interactions.
 
-See [this guide](../how-tos/persistence.ipynb) for how to add memory to your graph.
+See [this guide](./../how-tos/persistence.ipynb) for how to add memory to your graph.
 
 ## Human-in-the-loop
 
@@ -30,7 +30,7 @@ There are a few common human-in-the-loop interaction patterns we see emerging.
 
 A basic one is to have the agent wait for approval before executing certain tools. This may be all tools, or just a subset of tools. This is generally recommend for more sensitive actions (like writing to a database). This can easily be done in LangGraph by setting a [breakpoint](./low_level.md#breakpoints) before specific nodes.
 
-See [this guide](../how-tos/breakpoints.ipynb) for how do this in LangGraph.
+See [this guide](./../how-tos/breakpoints.ipynb) for how do this in LangGraph.
 
 ### Wait for input
 
@@ -42,19 +42,19 @@ A similar one is to have the agent wait for human input. This can be done by:
 4. Update the state with that user input, acting as that node
 5. Resume execution
 
-See [this guide](../how-tos/wait-user-input.ipynb) for how do this in LangGraph.
+See [this guide](./../how-tos/wait-user-input.ipynb) for how do this in LangGraph.
 
 ### Edit agent actions
 
 This is a more advanced interaction pattern. In this interaction pattern the human can actually edit some of the agent's previous decisions. This can be done either during the flow (after a [breakpoint](./low_level.md#breakpoints), part of the [approval](#approval) flow) or after the fact (as part of [time-travel](#time-travel))
 
-See [this guide](../how-tos/edit-graph-state.ipynb) for how do this in LangGraph.
+See [this guide](./../how-tos/edit-graph-state.ipynb) for how do this in LangGraph.
 
 ### Time travel
 
 This is a pretty advanced interaction pattern. In this interaction pattern, the human can look back at the list of previous checkpoints, find one they like, optionally [edit it](#edit-agent-actions), and then resume execution from there.
 
-See [this guide](../how-tos/time-travel.ipynb) for how to do this in LangGraph.
+See [this guide](./../how-tos/time-travel.ipynb) for how to do this in LangGraph.
 
 ## Multi-agent
 
@@ -82,10 +82,10 @@ One of the few high level, pre-built agents we have in LangGraph - you can use i
 
 This is named after and based on the [ReAct](https://arxiv.org/abs/2210.03629) paper. However, there are several differences between this paper and our implementation:
 
-- First, we use [tool-calling](#tool-calling) to have LLMs call tools, whereas the paper used prompting + parsing of raw output. This is because tool calling did not exist when the paper was written, but is generally better and more reliable.
-- Second, we use messages to prompt the LLM, whereas the paper used string formatting. This is because at the time of writing, LLMs didn't even expose a message-based interface, whereas now that's the only interface they expose.
-- Third, the paper required all inputs to the tools to be a single string. This was largely due to LLMs not being super capable at the time, and only really being able to generate a single input. Our implementation allows for using tools that require multiple inputs.
-- Forth, the paper only looks at calling a single tool at the time, largely due to limitations in LLMs performance at the time. Our implementation allows for calling multiple tools at a time.
-- Finally, the paper asked the LLM to explicitly generate a "Thought" step before deciding which tools to call. This is the "Reasoning" part of "ReAct". Our implementation does not do this by default, largely because LLMs have gotten much better and that is not as necessary. Of course, if you wish to prompt it do so, you certainly can.
+-   First, we use [tool-calling](#tool-calling) to have LLMs call tools, whereas the paper used prompting + parsing of raw output. This is because tool calling did not exist when the paper was written, but is generally better and more reliable.
+-   Second, we use messages to prompt the LLM, whereas the paper used string formatting. This is because at the time of writing, LLMs didn't even expose a message-based interface, whereas now that's the only interface they expose.
+-   Third, the paper required all inputs to the tools to be a single string. This was largely due to LLMs not being super capable at the time, and only really being able to generate a single input. Our implementation allows for using tools that require multiple inputs.
+-   Forth, the paper only looks at calling a single tool at the time, largely due to limitations in LLMs performance at the time. Our implementation allows for calling multiple tools at a time.
+-   Finally, the paper asked the LLM to explicitly generate a "Thought" step before deciding which tools to call. This is the "Reasoning" part of "ReAct". Our implementation does not do this by default, largely because LLMs have gotten much better and that is not as necessary. Of course, if you wish to prompt it do so, you certainly can.
 
-See [this guide](../how-tos/time-travel.ipynb) for a full walkthrough of how to use the prebuilt ReAct agent.
+See [this guide](./../how-tos/time-travel.ipynb) for a full walkthrough of how to use the prebuilt ReAct agent.
